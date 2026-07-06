@@ -1,11 +1,14 @@
-namespace SistemaEmergenciaHospitalaria.Entidades;
 
-public class Usuario
+namespace SistemaEmergenciaHospitalaria.Entidades
 {
-    public string Cedula { get; set; } = string.Empty;
-    public string Nombre { get; set; } = string.Empty;
-    public string? Rol { get; set; }
-    public string? Avatar { get; set; }
-    public string? Terminal { get; set; }
-    public string? PasswordHash { get; set; }
+    public class Usuario
+    {
+        public int UsuarioID { get; set; }
+        public string Cedula { get; set; } = string.Empty;
+        public string NombreCompleto { get; set; } = string.Empty;
+        public string Rol { get; set; } = string.Empty; // Enfermera, Medico, Administrador
+        public bool Activo { get; set; } = true;
+        public DateTime FechaCreacion { get; set; }
+        public DateTime? UltimoAcceso { get; set; }
+    }
 }
