@@ -70,7 +70,7 @@ public class BackendBridge
     {
         try
         {
-            var dt = _pacienteBll.ObtenerPacientes();
+            var dt = _pacienteBll.BuscarPaciente("");
             return Json(dt);
         }
         catch (Exception ex)
@@ -122,8 +122,7 @@ public class BackendBridge
     {
         try
         {
-            fecha ??= DateTime.Today.ToString("yyyy-MM-dd");
-            var dt = _pacienteBll.ObtenerConsultasDelDia(fecha);
+            var dt = _pacienteBll.ObtenerSalaEspera();
             return Json(dt);
         }
         catch (Exception ex)
@@ -136,7 +135,8 @@ public class BackendBridge
     {
         try
         {
-            var ok = _pacienteBll.ActualizarStatusConsulta(id, status ?? "pendiente");
+            var c = new Consulta { ConsultaID = id, Estado = status ?? "En espera" };
+            var ok = _pacienteBll.ActualizarConsulta(c);
             return Ok(new { success = ok });
         }
         catch (Exception ex)
@@ -153,19 +153,18 @@ public class BackendBridge
     {
         try
         {
-            var usuario = _pacienteBll.ValidarLogin(cedula, password);
-            if (usuario != null)
+            var dt = _pacienteBll.ValidarLogin(cedula, password);
+            if (dt.Rows.Count > 0)
             {
+                var row = dt.Rows[0];
                 return Json(new
                 {
                     success = true,
                     usuario = new
                     {
-                        cedula = usuario.Cedula,
-                        nombre = usuario.Nombre,
-                        rol = usuario.Rol,
-                        avatar = usuario.Avatar,
-                        terminal = usuario.Terminal
+                        cedula = row["Cedula"]?.ToString(),
+                        nombre = row["NombreCompleto"]?.ToString(),
+                        rol = row["Rol"]?.ToString()
                     }
                 });
             }
